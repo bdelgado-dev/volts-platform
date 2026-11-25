@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.O.L.T.S. Learning Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+
+        <!-- Main menu -->
+        <section id="menu-screen" class="screen active">
+            <div class="menu-box">
+                <p class="subtitle">A TECHNICAL-VOCATIONAL LEARNING PLATFORM</p>
+                <h1>V.O.L.T.S.</h1>
+                <p class="description">Search real workshops for hidden tools, then use them to escape, build ladders, chairs, tables and more across 24 levels.</p>
+                <p class="stats" id="menu-stats"></p>
+                <button id="start-btn" class="main-button">START GAME</button>
+                <button id="how-btn">HOW TO PLAY</button>
+                <button id="progress-btn">MY PROGRESS &amp; ACHIEVEMENTS</button>
+                <button id="menu-btn">SETTINGS &amp; CONTROLS</button>
+                <button id="exit-btn">EXIT GAME</button>
+            </div>
+        </section>
+
+        <!-- How to play (pictures are drawn from the real game) -->
+        <section id="how-screen" class="screen">
+            <div class="panel wide-panel">
+                <h2>HOW TO PLAY</h2>
+                <div class="pics">
+                    <figure><canvas id="pic1" width="320" height="200"></canvas><figcaption>1. Walk the hub and choose a competency door.</figcaption></figure>
+                    <figure><canvas id="pic2" width="320" height="200"></canvas><figcaption>2. Search furniture to find hidden tools.</figcaption></figure>
+                    <figure><canvas id="pic3" width="320" height="200"></canvas><figcaption>3. Use the tools in order at the workbench or exit.</figcaption></figure>
+                </div>
+                <p>Finish all 6 Woodworking levels to unlock Welding, Electrical Installations and Project Making. Each tool you pick up teaches you what it is and what it is used for.</p>
+                <button class="main-button back-menu">BACK TO MENU</button>
+            </div>
+        </section>
+
+        <!-- Settings and controls -->
+        <section id="settings-screen" class="screen">
+            <div class="panel wide-panel">
+                <h2>SETTINGS &amp; CONTROLS</h2>
+                <div class="settings-columns">
+                    <div>
+                        <h3>Movement</h3>
+                        <p>W / A / S / D - Walk</p>
+                        <p>Arrow Keys - Walk</p>
+                        <p>E / Space - Talk, enter door, use exit</p>
+                        <p>B - Open / close bag details</p>
+                        <p>1-9 - Select a tool in the bag</p>
+                        <p>Esc - Pause</p>
+                    </div>
+                    <div>
+                        <h3>Tips</h3>
+                        <p>Stand next to furniture and press E to search it.</p>
+                        <p>Some furniture is empty. Search them all!</p>
+                        <p>Read each tool card. It is on the quiz.</p>
+                        <p>The minimap shows where you are.</p>
+                        <p>Progress saves automatically.</p>
+                    </div>
+                </div>
+                <h3>Audio Settings</h3>
+                <label>Sound Effects<input type="range" id="sfx-volume" min="0" max="100" value="60"></label>
+                <label>Music<input type="range" id="music-volume" min="0" max="100" value="35"></label>
+                <label class="check"><input type="checkbox" id="music-on" checked> Play music inside escape rooms</label>
+                <button id="reset-btn">RESET ALL PROGRESS</button>
+                <button class="main-button back-menu">BACK TO MENU</button>
+            </div>
+        </section>
+
+        <!-- Progress and achievements -->
+        <section id="progress-screen" class="screen">
+            <div class="panel wide-panel">
+                <p class="subtitle">COMPETENCY CHECKLIST</p>
+                <h2>MY PROGRESS</h2>
+                <p id="prog-xp"></p>
+                <div id="prog-list"></div>
+                <h3>Achievements</h3>
+                <div id="ach-list"></div>
+                <button class="main-button back-menu">BACK TO MENU</button>
+            </div>
+        </section>
+
+        <!-- Gameplay -->
+        <main id="game-screen" class="hidden">
+            <header id="top-hud">
+                <div class="hud-box"><small>COMPETENCY</small><strong id="hud-comp">HUB</strong></div>
+                <div class="hud-box"><small>LEVEL</small><strong id="hud-level">-</strong></div>
+                <div class="hud-box"><small>TOOLS FOUND</small><strong id="hud-tools">-</strong></div>
+                <div class="hud-box"><small>XP</small><strong id="hud-xp">0</strong></div>
+                <button id="pause-btn">PAUSE</button>
+            </header>
+
+            <canvas id="game-canvas"></canvas>
+
+            <div id="minimap-box">
+                <small>MINIMAP</small>
+                <canvas id="minimap" width="160" height="100"></canvas>
+            </div>
+
+            <div id="bag-panel">
+                <h3>BAG</h3>
+                <div class="inventory-slots" id="bag-slots"></div>
+                <div class="backpack" id="bag-details">
+                    <p class="item-description" id="bag-desc"></p>
+                </div>
+            </div>
+
+            <div id="mission-box"><small>MISSION</small><strong id="mission-goal">-</strong><p id="mission-steps"></p></div>
+            <div id="toast"></div>
+            <div id="hint"></div>
+        </main>
+
+        <!-- Coach Volt and mission briefings -->
+        <section id="talk-screen" class="screen overlay">
+            <div class="panel">
+                <div class="big-icon" id="talk-face">🧑‍🏫</div>
+                <p class="subtitle" id="talk-who">COACH VOLT</p>
+                <p id="talk-text" class="talk-text"></p>
+                <div class="dialog-buttons">
+                    <button id="talk-prev">BACK</button>
+                    <button id="talk-next" class="main-button">NEXT</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tool card -->
+        <section id="tool-screen" class="screen overlay">
+            <div class="panel">
+                <p class="subtitle">TOOL COLLECTED</p>
+                <div class="big-icon" id="tool-icon"></div>
+                <h2 id="tool-name"></h2>
+                <h3>What it is</h3>
+                <p id="tool-desc"></p>
+                <h3>Commonly used for</h3>
+                <p id="tool-use"></p>
+                <button id="tool-ok" class="main-button">PUT IN BAG</button>
+            </div>
+        </section>
+
+        <!-- Knowledge challenge at the exit -->
+        <section id="ask-screen" class="screen overlay">
+            <div class="panel wide-panel">
+                <p class="subtitle" id="ask-step"></p>
+                <h2 id="ask-q"></h2>
+                <div id="ask-opts" class="opt-grid"></div>
+                <p id="ask-fb" class="feedback"></p>
+                <button id="ask-back">BACK TO THE ROOM</button>
+            </div>
+        </section>
+
+        <!-- Competency / level select -->
+        <section id="comp-screen" class="screen overlay">
+            <div class="panel">
+                <p class="subtitle" id="comp-sub">COMPETENCY</p>
+                <h2 id="comp-title"></h2>
+                <p id="comp-msg"></p>
+                <div id="comp-levels" class="opt-grid"></div>
+                <button id="comp-back">CANCEL</button>
+            </div>
+        </section>
+
+        <!-- Assessment result -->
+        <section id="result-screen" class="screen overlay">
+            <div class="panel">
+                <p class="subtitle">YOU ESCAPED!</p>
+                <h2 id="res-title"></h2>
+                <div id="res-text"></div>
+                <button id="res-next" class="main-button">NEXT LEVEL</button>
+                <button id="res-hub">BACK TO THE HUB</button>
+            </div>
+        </section>
+
+        <!-- Pause -->
+        <section id="pause-screen" class="screen overlay">
+            <div class="panel">
+                <h2>GAME PAUSED</h2>
+                <button id="resume-btn" class="main-button">RESUME</button>
+                <button id="pause-menu-btn">SAVE &amp; BACK TO MAIN MENU</button>
+            </div>
+        </section>
+
+        <!-- Exit confirmation and goodbye -->
+        <section id="exit-screen" class="screen">
+            <div class="dialog">
+                <h3>V.O.L.T.S. says</h3>
+                <p>Do you want to leave V.O.L.T.S.? Your progress is saved.</p>
+                <div class="dialog-buttons">
+                    <button id="exit-confirm-btn">OK</button>
+                    <button id="exit-cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="goodbye-screen" class="screen">
+            <div class="panel">
+                <h2>SEE YOU NEXT CLASS</h2>
+                <p>Thanks for learning with V.O.L.T.S. You can close this tab now.</p>
+                <button class="main-button back-menu">RETURN TO MENU</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
